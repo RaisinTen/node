@@ -1,8 +1,8 @@
 name: Timezone update
 on:
-  schedule:
-    # Run once a week at 00:05 AM UTC on Sunday.
-    - cron: 5 0 * * 0
+  push:
+    branches:
+      - tools/add-version-info-to-timezone-update-PR
 
   workflow_dispatch:
 
@@ -15,7 +15,6 @@ jobs:
       contents: write  # to push local changes (gr2m/create-or-update-pull-request-action)
       pull-requests: write  # to create a PR (gr2m/create-or-update-pull-request-action)
 
-    if: github.repository == 'nodejs/node'
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +35,7 @@ jobs:
       - name: Open Pull Request
         uses: gr2m/create-or-update-pull-request-action@6720400cad8e74d7adc64640e4e6ea6748b83d8f  # Create a PR or update the Action's existing PR
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_USER_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           author: Node.js GitHub Bot <github-bot@iojs.org>
           body: |
@@ -48,8 +47,7 @@ jobs:
             ```js
             console.log(process.versions.tz)
             ```
-          branch: actions/timezone-update
+          branch: tools/add-version-info-to-timezone-update-PR
           commit-message: 'deps: update timezone'
           labels: dependencies
           title: 'deps: update timezone'
-          reviewers: \@nodejs/i18n-api
